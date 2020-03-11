@@ -7,8 +7,6 @@ const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zaGciLCJhIjoiY2s3am9lYzlwMDhsMTNrbGtiZjF0bDh
 
 const Map = () => {
   const [viewport, setViewport] = useState({
-    // width: window.innerWidth,
-    // height: window.innerHeight,
     latitude: -35.07237,
     longitude: 138.49895,
     zoom: 14
