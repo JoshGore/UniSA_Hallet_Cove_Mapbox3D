@@ -1,0 +1,24 @@
+{
+  "tour": [
+    {
+      "type": "map",
+      "title": "Introduction to the geology at Hallett Cove",
+      "content": "At Hallett Cove many significant events in the geological history of South Australia can be observed. The oldest rocks were deposited about 600 million years ago. These were buried, cemented then folded and uplifted during a period of mountain building about 500 million years ago. For the next 200 million years this ancient mountain range was eroded. About 280 million years ago Australia formed part of Gondwana and was centred over the South Pole covered by an ice sheet. This ice sheet moved and polished the underlying bedrock surface. As the ice sheet began to melt, sand and clay were deposited and larger boulders were dropped from melting floating icebergs. This was followed by another period of erosion lasting about 270 million years. Hallett Cove remained near sea level until about three million years ago when downfaulting submerged the area and a thin layer of white fossiliferous sandstone was deposited. Soon after uplift of the Mount Lofty Ranges increased, and the area was uplifted above sea level. Rivers eroding from the uplifting Mount Lofty Ranges deposited a thick layer of alluvial clay, which has subsequently been covered by calcrete and recent soil. Continuing uplift caused erosion and the badlands landscape."
+    },
+    {
+      "type": "photosphere",
+      "key": "hij6hHCJIKuMZKzZN9opNA",
+      "title": "1. From Sea Bed to Mountain Range",
+      "content": "The chocolate-coloured rocks of Black Cliff were deposited as sand and silt in the sea about 600 million years ago. About 500 million years ago, they were uplifted and folded during a period of mountain building which formed what has been called the Delamerian Orogeny. The folds are best seen from the top of Black Cliff at low tide."
+    },
+    {
+      "type": "panorama",
+      "key": "198455",
+      "title": "2. Evidence of an ancient ice age",
+      "content": "The polished and striated rock surface (galacial pavement) on the top of Black Cliff was caused by a northwesterly moving ice sheet about 280 million years ago.",
+      "additional": {
+        "widthHeight": [74214, 27041]
+      }
+    }
+  ]
+}
