@@ -1,11 +1,17 @@
-import React, {useState, useRef} from  'react';
-import ReactMapGl, {Popup, Layer} from 'react-map-gl';
+import React, {useState, useRef, useEffect} from  'react';
+import ReactMapGl, {FlyToInterpolator, Source, Layer, Popup} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapillaryPopup from './map/MapillaryPopup';
 
 const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zaGciLCJhIjoiY2s3am9lYzlwMDhsMTNrbGtiZjF0bDhwdSJ9.P7AnDzO_uMnrMeLAJxsFKQ';
 
-const Map = ({setSelectedMapillaryImageKey, setSelectedMapillaryImageLatLng}) => {
+const Map = ({
+  setSelectedMapillaryImageKey, 
+  setSelectedMapillaryImageLatLng,
+  setSelectedGigapanImageKey,
+  setSelectedGigapanImageWidthHeight,
+  setSelectedGigapanImageLatLng,
+}) => {
   const [viewport, setViewport] = useState({
     latitude: -35.07237,
     longitude: 138.49895,
@@ -14,36 +20,85 @@ const Map = ({setSelectedMapillaryImageKey, setSelectedMapillaryImageLatLng}) =>
   const [mapillaryPopup, setMapillaryPopup] = useState({lngLat: [undefined, undefined], imgKey: undefined});
   const mapRef = useRef(null);
   const handleHover = (event) => {
-    const getAllImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['mapillary-images-interactive-buffer']});
-    getAllImages().length > 0 ? 
+    const getAllImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['mapillary-images-interactive-buffer', 'mapillary-highres-images', 'gigapan-image-locations']});
+    // getAllImages().length > 0 && (getAllImages()[0].layer.id === 'mapillary-images-interactive-buffer' || getAllImages()[0].layer.id === 'mapillary-highres-images') ? 
+    getAllImages().length > 0 && getAllImages()[0].layer.id === 'mapillary-images-interactive-buffer' ? 
       setMapillaryPopup({lngLat: getAllImages()[0].geometry.coordinates, imgKey: getAllImages()[0].properties.key}) : 
       setMapillaryPopup({lngLat: [undefined, undefined], imgKey: undefined})
   };
   const handleClick = (event) => {
-    const getAllImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['mapillary-images-interactive-buffer']});
-    if (getAllImages().length > 0) {
-      setSelectedMapillaryImageKey(getAllImages()[0].properties.key);
-      setSelectedMapillaryImageLatLng([ getAllImages()[0].geometry.coordinates[1], getAllImages()[0].geometry.coordinates[0]]);
+    // update to set selection state as well as selection details
+    const getAllMapillaryImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['mapillary-images-interactive-buffer', 'mapillary-highres-images']});
+    const getAllGigapanImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['gigapan-image-locations']});
+    if (getAllGigapanImages().length > 0) {
+      setSelectedGigapanImageWidthHeight([
+        getAllGigapanImages()[0].properties.width,
+        getAllGigapanImages()[0].properties.height
+      ]);
+      setSelectedGigapanImageKey(getAllGigapanImages()[0].properties.gigapan_id);
+      setSelectedGigapanImageLatLng([ getAllGigapanImages()[0].geometry.coordinates[1], getAllGigapanImages()[0].geometry.coordinates[0]]);
+    }
+    else if (getAllMapillaryImages().length > 0) {
+      setSelectedMapillaryImageKey(getAllMapillaryImages()[0].properties.key);
+      setSelectedMapillaryImageLatLng([ getAllMapillaryImages()[0].geometry.coordinates[1], getAllMapillaryImages()[0].geometry.coordinates[0]]);
     }
   };
+  // image layer toggle
   return (
     <ReactMapGl
       mapStyle={'mapbox://styles/joshg/ck7l9wc350fcf1iqg3kp15es3'}
       {...viewport}
       onViewportChange={setViewport}
+      transitionDuration={75}
+      transitionInterpolator={new FlyToInterpolator()}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       width='100%'
       height='100%'
       ref={mapRef}
       onHover={handleHover}
       onClick={handleClick}
-      interactiveLayerIds={['mapillary-images-interactive-buffer']}
+      interactiveLayerIds={['mapillary-images-interactive-buffer', 'mapillary-highres-images', 'gigapan-image-locations']}
     >
       <Layer id={"mapillary-images-interactive-buffer"} type={'circle'} source={"composite"} source-layer={"mapillary_images"} 
-    paint={{
-      'circle-opacity': 0,
-      'circle-radius': 15,
-    }}
+        paint={{
+          'circle-opacity': 0,
+          'circle-radius': 15,
+        }}
+      />
+      <Layer id={'all-of-park-image'} type={'raster'} source={'mapbox://joshg.2sq1wkzy'} beforeId={'tunnel-street-minor-low'}/>
+      <Layer 
+        id={'mapillary-highres-images'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'mapillary_images'}
+        beforeId={'gigapan-image-locations'}
+        filter={[
+          "match",
+          ["get", "high_res"],
+          [1],
+          true,
+          false
+        ]} 
+        layout={{ 
+          'icon-image': 'photo_sphere_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
+      />
+      <Layer 
+        id={'gigapan-image-locations'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'gigapan_image_locations-6rkjlq'}
+        layout={{ 
+          'icon-image': 'panorama_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
       />
     {mapillaryPopup.lngLat[0] && <MapillaryPopup lngLat={mapillaryPopup.lngLat} imgKey={mapillaryPopup.imgKey}/>
       }

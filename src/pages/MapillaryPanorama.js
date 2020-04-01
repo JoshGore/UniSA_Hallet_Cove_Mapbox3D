@@ -37,7 +37,7 @@ const Map = ({imageLatLng, imageViewBearing}) => {
   )
 }
 
-const Panorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng}) => {
+const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng}) => {
   const [mouseOverMap, setMouseOverMap] = useState(false);
   const [imageViewBearing, setImageViewBearing] = useState(0);
   useEffect(() => {
@@ -99,4 +99,4 @@ const Panorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng}) => {
   );
 }
 
-export default Panorama;
+export default MapillaryPanorama;
