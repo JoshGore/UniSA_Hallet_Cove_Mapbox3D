@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InfoBox = ({info, handleTourNext, handleTourPrevious}) => {
+const InfoBox = ({heading, body, handleTourNext, handleTourPrevious}) => {
   return (
     <div 
       id="content-container" 
@@ -12,15 +12,26 @@ const InfoBox = ({info, handleTourNext, handleTourPrevious}) => {
         right: 5, 
         background: 'rgba(0, 0, 0, 0.5)', 
         zIndex: 2000,
-        overflowY: 'scroll',
         color: 'white',
+        display: 'flex',
+        flexFlow: 'column',
       }}
     >
-      <a href='#' onClick={handleTourPrevious}>previous</a>
-      &nbsp;
-      <a href='#' onClick={handleTourNext}>next</a>
-      <br />
-      {info}
+      <div 
+        style={{
+          overflowY: 'scroll',
+          flexGrow: 1,
+        }}
+      >
+          <br />
+          <h3>{heading}</h3>
+          {body}
+      </div>
+      <div style={{bottom: 0, width: '100%'}}>
+        <u onClick={handleTourPrevious} style={{color: 'white', cursor: 'pointer'}}>previous</u>
+        &nbsp;
+        <u onClick={handleTourNext} style={{color: 'white', cursor: 'pointer'}}>next</u>
+      </div>
     </div>
   );
 }

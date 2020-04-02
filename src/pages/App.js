@@ -13,14 +13,14 @@ const App = () => {
   const [selectedGigapanImageKey, setSelectedGigapanImageKey] = useState(undefined);
   const [selectedGigapanImageWidthHeight, setSelectedGigapanImageWidthHeight] = useState([undefined, undefined]);
   const [selectedGigapanImageLatLng, setSelectedGigapanImageLatLng] = useState([undefined, undefined]);
-  const [infoBoxContent, setInfoBoxContent] = useState('dummy content');
-  const [infoBoxTitle, setInfoBoxTitle] = useState('dummy content');
+  const [infoBoxContent, setInfoBoxContent] = useState('');
+  const [infoBoxTitle, setInfoBoxTitle] = useState('');
   const [currentTourStep, setCurrentTourStep] = useState(0);
   const handleTourNext = () => {
     (TourInfo.tour.length - 1) > currentTourStep && setCurrentTourStep(currentTourStep + 1);
   }
   const handleTourPrevious = () => {
-    TourInfo.tour.length > 0 && setCurrentTourStep(currentTourStep - 1);
+    currentTourStep > 0 && setCurrentTourStep(currentTourStep - 1);
   }
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <InfoBox info={infoBoxContent} handleTourNext={handleTourNext} handleTourPrevious={handleTourPrevious}/>
+      <InfoBox heading={infoBoxTitle} body={infoBoxContent} handleTourNext={handleTourNext} handleTourPrevious={handleTourPrevious}/>
       <Map 
         setSelectedMapillaryImageKey={setSelectedMapillaryImageKey} 
         setSelectedMapillaryImageLatLng={setSelectedMapillaryImageLatLng}
