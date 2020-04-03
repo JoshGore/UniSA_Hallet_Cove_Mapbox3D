@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import Map from './Map';
 import MapillaryPanorama from './MapillaryPanorama';
@@ -6,7 +7,8 @@ import GigapanPanorama from './GigapanPanorama';
 import InfoBox from './InfoBox';
 import TourInfo from './TourInfo';
 
-const App = () => {
+const AppContents = ({showDetails = false}) => {
+  // track selection type, selection key, selection details (location, view direction, image details if gigapan), selection zoom and view location 
   const selectionType = useState(null);
   const [selectedMapillaryImageKey,setSelectedMapillaryImageKey] = useState(null);
   const [selectedMapillaryImageLatLng, setSelectedMapillaryImageLatLng] = useState([undefined, undefined]);
@@ -42,7 +44,18 @@ const App = () => {
 
   return (
     <div className="App">
-      <InfoBox heading={infoBoxTitle} body={infoBoxContent} handleTourNext={handleTourNext} handleTourPrevious={handleTourPrevious}/>
+      <InfoBox 
+        heading={infoBoxTitle} 
+        body={infoBoxContent} 
+        handleTourNext={handleTourNext} 
+        handleTourPrevious={handleTourPrevious} 
+        selectedGigapanImageKey={selectedGigapanImageKey}
+        selectedGigapanImageLatLng={selectedGigapanImageLatLng}
+        selectedGigapanImageWidthHeight={selectedGigapanImageWidthHeight}
+        selectedMapillaryImageKey={selectedMapillaryImageKey}
+        selectedMapillaryImageLatLng={selectedMapillaryImageLatLng}
+        showDetails={showDetails}
+      />
       <Map 
         setSelectedMapillaryImageKey={setSelectedMapillaryImageKey} 
         setSelectedMapillaryImageLatLng={setSelectedMapillaryImageLatLng}
@@ -66,6 +79,21 @@ const App = () => {
             imageLatLng={selectedGigapanImageLatLng} 
           />}
     </div>
+  );
+}
+
+const App = () => {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/details">
+          <AppContents showDetails={true}/>
+        </Route>
+        <Route path="/">
+          <AppContents />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

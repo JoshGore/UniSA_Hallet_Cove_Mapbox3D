@@ -1,6 +1,32 @@
 import React from 'react';
 
-const InfoBox = ({heading, body, handleTourNext, handleTourPrevious}) => {
+const SelectionDetails = ({selectedGigapanImageKey, selectedGigapanImageLatLng, selectedGigapanImageWidthHeight, selectedMapillaryImageKey, selectedMapillaryImageLatLng}) => {
+  return (
+    <div>
+    {selectedGigapanImageKey && 
+        <div>
+        <p>{`Image Key: ${selectedGigapanImageKey}`}</p>
+        <p>{`Gigapan Width and Height: [${selectedGigapanImageWidthHeight[0]}, ${selectedGigapanImageWidthHeight[0]}]`}</p>
+        <p>{`Gigapan Image Lat and Lng: [${selectedGigapanImageLatLng[0]}, ${selectedGigapanImageLatLng[0]}]`}</p>
+        </div>
+    }
+    {selectedMapillaryImageKey && <p>{`Image Key: ${selectedMapillaryImageKey}`}</p> }
+    </div>
+  );
+}
+
+const InfoBox = ({
+  heading, 
+  body, 
+  handleTourNext, 
+  handleTourPrevious,
+  selectedGigapanImageKey, 
+  selectedGigapanImageLatLng,
+  selectedGigapanImageWidthHeight, 
+  selectedMapillaryImageKey,
+  selectedMapillaryImageLatLng,
+  showDetails
+}) => {
   return (
     <div 
       id="content-container" 
@@ -23,6 +49,13 @@ const InfoBox = ({heading, body, handleTourNext, handleTourPrevious}) => {
           flexGrow: 1,
         }}
       >
+        {showDetails && <SelectionDetails 
+          selectedGigapanImageKey={selectedGigapanImageKey} 
+          selectedGigapanImageLatLng={selectedGigapanImageLatLng} 
+          selectedGigapanImageWidthHeight={selectedGigapanImageWidthHeight} 
+          selectedMapillaryImageKey={selectedMapillaryImageKey} 
+          selectedMapillaryImageLatLng={selectedMapillaryImageLatLng}
+          />}
           <br />
           <h3>{heading}</h3>
           {body}
