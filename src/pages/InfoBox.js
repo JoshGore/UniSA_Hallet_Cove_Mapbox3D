@@ -6,8 +6,8 @@ const SelectionDetails = ({selectedGigapanImageKey, selectedGigapanImageLatLng, 
     {selectedGigapanImageKey && 
         <div>
         <p>{`Image Key: ${selectedGigapanImageKey}`}</p>
-        <p>{`Gigapan Width and Height: [${selectedGigapanImageWidthHeight[0]}, ${selectedGigapanImageWidthHeight[0]}]`}</p>
-        <p>{`Gigapan Image Lat and Lng: [${selectedGigapanImageLatLng[0]}, ${selectedGigapanImageLatLng[0]}]`}</p>
+        <p>{`Gigapan Width and Height: [${selectedGigapanImageWidthHeight[0]}, ${selectedGigapanImageWidthHeight[1]}]`}</p>
+        <p>{`Gigapan Image Lat and Lng: [${selectedGigapanImageLatLng[0]}, ${selectedGigapanImageLatLng[1]}]`}</p>
         </div>
     }
     {selectedMapillaryImageKey && <p>{`Image Key: ${selectedMapillaryImageKey}`}</p> }
