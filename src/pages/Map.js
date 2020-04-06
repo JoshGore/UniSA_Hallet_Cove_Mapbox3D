@@ -49,8 +49,6 @@ const Map = ({
       mapStyle={'mapbox://styles/joshg/ck7l9wc350fcf1iqg3kp15es3'}
       {...viewport}
       onViewportChange={setViewport}
-      transitionDuration={75}
-      transitionInterpolator={new FlyToInterpolator()}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       width='100%'
       height='100%'
