@@ -1,16 +1,17 @@
 import React, {useState, useRef, useEffect} from  'react';
-import ReactMapGl, {FlyToInterpolator, Source, Layer, Popup} from 'react-map-gl';
+import ReactMapGl, {FlyToInterpolator, Source, Layer, Popup, NavigationControl} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapillaryPopup from './map/MapillaryPopup';
 
 const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zaGciLCJhIjoiY2s3am9lYzlwMDhsMTNrbGtiZjF0bDhwdSJ9.P7AnDzO_uMnrMeLAJxsFKQ';
 
 const Map = ({
-  setSelectedMapillaryImageKey, 
-  setSelectedMapillaryImageLatLng,
-  setSelectedGigapanImageKey,
-  setSelectedGigapanImageWidthHeight,
-  setSelectedGigapanImageLatLng,
+  setMapillaryImageKey, 
+  setMapillaryImageLatLng,
+  setGigapanImageKey,
+  setGigapanImageWidthHeight,
+  setGigapanImageLatLng,
+  setSelectionType,
 }) => {
   const [viewport, setViewport] = useState({
     latitude: -35.07237,
@@ -31,16 +32,18 @@ const Map = ({
     const getAllMapillaryImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['mapillary-images-interactive-buffer', 'mapillary-highres-images']});
     const getAllGigapanImages = () => mapRef.current.queryRenderedFeatures(event.point, {layers: ['gigapan-image-locations']});
     if (getAllGigapanImages().length > 0) {
-      setSelectedGigapanImageWidthHeight([
+      setGigapanImageWidthHeight([
         getAllGigapanImages()[0].properties.width,
         getAllGigapanImages()[0].properties.height
       ]);
-      setSelectedGigapanImageKey(getAllGigapanImages()[0].properties.gigapan_id);
-      setSelectedGigapanImageLatLng([ getAllGigapanImages()[0].geometry.coordinates[1], getAllGigapanImages()[0].geometry.coordinates[0]]);
+      setGigapanImageKey(getAllGigapanImages()[0].properties.gigapan_id);
+      setGigapanImageLatLng([ getAllGigapanImages()[0].geometry.coordinates[1], getAllGigapanImages()[0].geometry.coordinates[0]]);
+      setSelectionType('panorama');
     }
     else if (getAllMapillaryImages().length > 0) {
-      setSelectedMapillaryImageKey(getAllMapillaryImages()[0].properties.key);
-      setSelectedMapillaryImageLatLng([ getAllMapillaryImages()[0].geometry.coordinates[1], getAllMapillaryImages()[0].geometry.coordinates[0]]);
+      setMapillaryImageKey(getAllMapillaryImages()[0].properties.key);
+      setMapillaryImageLatLng([ getAllMapillaryImages()[0].geometry.coordinates[1], getAllMapillaryImages()[0].geometry.coordinates[0]]);
+      setSelectionType('photosphere');
     }
   };
   // image layer toggle
@@ -57,6 +60,9 @@ const Map = ({
       onClick={handleClick}
       interactiveLayerIds={['mapillary-images-interactive-buffer', 'mapillary-highres-images', 'gigapan-image-locations']}
     >
+      <div style={{position: 'absolute', left: 0, padding: '10px'}}>
+        <NavigationControl />
+      </div>
       <Layer id={"mapillary-images-interactive-buffer"} type={'circle'} source={"composite"} source-layer={"mapillary_images"} 
         paint={{
           'circle-opacity': 0,

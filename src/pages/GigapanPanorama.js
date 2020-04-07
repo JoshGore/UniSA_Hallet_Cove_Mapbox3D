@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import OpenSeadragon from 'openseadragon';
-import ReactMapGl, { Marker } from 'react-map-gl';
+import React, { useEffect, useState, useRef } from 'react'
+import OpenSeadragon, {Point, Rect} from 'openseadragon';
+import ReactMapGl, { Layer, Marker } from 'react-map-gl';
 import {useSpring, animated} from 'react-spring';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PanoViewLocationMarker from './panoviewlocation.svg';
@@ -29,6 +29,41 @@ const Map = ({imageLatLng, imageViewBearing}) => {
       width='100%'
       height='100%'
     >
+      <Layer id={'all-of-park-image'} type={'raster'} source={'mapbox://joshg.2sq1wkzy'} beforeId={'tunnel-street-minor-low'}/>
+      <Layer 
+        id={'mapillary-highres-images'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'mapillary_images'}
+        beforeId={'gigapan-image-locations'}
+        filter={[
+          "match",
+          ["get", "high_res"],
+          [1],
+          true,
+          false
+        ]} 
+        layout={{ 
+          'icon-image': 'photo_sphere_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
+      />
+      <Layer 
+        id={'gigapan-image-locations'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'gigapan_image_locations-6rkjlq'}
+        layout={{ 
+          'icon-image': 'panorama_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
+      />
       {imageLatLng[0] && <Marker latitude={imageLatLng[0]} longitude={imageLatLng[1]} offsetLeft={-25} offsetTop={-25}>
         <img src={PanoViewLocationMarker} alt="panorama map location" style={{transform: `rotate(${imageViewBearing}deg)`}}/>
         </Marker>}
@@ -36,15 +71,28 @@ const Map = ({imageLatLng, imageViewBearing}) => {
   )
 }
 
-const GigapanPanorama = ({imageKey, setImageKey, imageHeight, imageWidth, imageLatLng}) => {
+const GigapanPanorama = ({imageKey, setImageKey, imageHeight, imageWidth, imageLatLng, imageBounds, setImageBounds, setSelectionType}) => {
+  const viewer = useRef(undefined);
+  const imageBoundsRef = useRef(imageBounds);
   const [mouseOverMap, setMouseOverMap] = useState(false);
   const [imageViewBearing, setImageViewBearing] = useState(0);
   const handleMouseMapLeave = () => setMouseOverMap(false);
   const handleMouseMapEnter = () => setMouseOverMap(true);
-  const handleMapClick = () => setImageKey(null);
+  const handleMapClick = () => setSelectionType('map');
   const mapDimensions = useSpring({height: mouseOverMap ? '200px' : '100px', width: mouseOverMap ? '200px' : '100px'});
+  const handleViewChange = (eventData) => {
+    const newImageBounds = viewer.current.viewport.getBoundsNoRotate();
+    setImageBounds({
+      x: newImageBounds.x, y: newImageBounds.y, width: newImageBounds.width, height: newImageBounds.height, degrees: newImageBounds.degrees
+    });
+  }
+
   useEffect(() => {
-    const viewer = OpenSeadragon({
+    imageBoundsRef.current = imageBounds;
+  });
+
+  useEffect(() => {
+    viewer.current = OpenSeadragon({
       id: "osd",
       prefixUrl: "./openseadragon/images/",
       navigatorSizeRatio: 0.5,
@@ -56,7 +104,33 @@ const GigapanPanorama = ({imageKey, setImageKey, imageHeight, imageWidth, imageL
         height:	imageHeight,
       }]
     });
-  }, [imageHeight, imageKey, imageWidth]);
+    viewer.current.addHandler('animation-finish', handleViewChange);
+    viewer.current.addOnceHandler('open', () => {
+      const homeImageBounds = imageBounds && imageBounds.x ? 
+        new Rect(imageBounds.x, imageBounds.y, imageBounds.width, imageBounds.height, imageBounds.degrees) 
+        : viewer.current.viewport.getHomeBounds();
+      setImageBounds({x: homeImageBounds.x, y: homeImageBounds.y, width: homeImageBounds.width, height: homeImageBounds.height, degrees: homeImageBounds.degrees});
+      viewer.current.viewport.fitBounds(homeImageBounds);
+    });
+    return (() => {
+      viewer.current.destroy();
+      viewer.current = null;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageKey]);
+
+  useEffect(() => {
+    let imageBoundsRect = undefined;
+    if ( !imageBounds || !imageBounds.x ) {
+      imageBoundsRect = viewer.current.viewport.getHomeBounds();
+    }
+    else {
+      imageBoundsRect = new Rect(
+        imageBounds.x, imageBounds.y, imageBounds.width, imageBounds.height, imageBounds.degrees
+      );
+    }
+    viewer.current.viewport.fitBounds(imageBoundsRect);
+  }, [imageBounds]);
 
   return (
     <div id={"osd"} style={{

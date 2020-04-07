@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as Mapillary from 'mapillary-js';
-import ReactMapGl, { Marker } from 'react-map-gl';
+import ReactMapGl, { Layer, Marker } from 'react-map-gl';
 import {useSpring, animated} from 'react-spring';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'mapillary-js/dist/mapillary.min.css';
@@ -30,6 +30,41 @@ const Map = ({imageLatLng, imageViewBearing}) => {
       width='100%'
       height='100%'
     >
+      <Layer id={'all-of-park-image'} type={'raster'} source={'mapbox://joshg.2sq1wkzy'} beforeId={'tunnel-street-minor-low'}/>
+      <Layer 
+        id={'mapillary-highres-images'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'mapillary_images'}
+        beforeId={'gigapan-image-locations'}
+        filter={[
+          "match",
+          ["get", "high_res"],
+          [1],
+          true,
+          false
+        ]} 
+        layout={{ 
+          'icon-image': 'photo_sphere_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
+      />
+      <Layer 
+        id={'gigapan-image-locations'} 
+        type={'symbol'} 
+        source={'composite'}
+        source-layer={'gigapan_image_locations-6rkjlq'}
+        layout={{ 
+          'icon-image': 'panorama_teardrop',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'bottom',
+        }}
+      />
       {imageLatLng[0] && <Marker latitude={imageLatLng[0]} longitude={imageLatLng[1]} offsetLeft={-25} offsetTop={-25}>
         <img src={PanoViewLocationMarker} alt="panorama map location" style={{transform: `rotate(${imageViewBearing}deg)`}}/>
         </Marker>}
@@ -37,11 +72,12 @@ const Map = ({imageLatLng, imageViewBearing}) => {
   )
 }
 
-const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng}) => {
+const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng, setSelectionType}) => {
   const [mouseOverMap, setMouseOverMap] = useState(false);
   const [imageViewBearing, setImageViewBearing] = useState(0);
+  const mly = useRef(undefined);
   useEffect(() => {
-      const mly = new Mapillary.Viewer(
+      mly.current = new Mapillary.Viewer(
           'mly',
           MAPILLARY_TOKEN,
           imageKey,
@@ -52,14 +88,18 @@ const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng})
             }
           }
       );
-      mly.setFilter(['==', 'userKey', 'mwAQzO4gTW2H2QwVOYVgJA'])
+      mly.current.setFilter(['==', 'userKey', 'mwAQzO4gTW2H2QwVOYVgJA'])
       window.addEventListener("resize", function() { mly.resize(); });
-      mly.on(Mapillary.Viewer.nodechanged, (node) => setImageLatLng([node.latLon.lat, node.latLon.lon]));
-      mly.on(Mapillary.Viewer.bearingchanged, (bearing) => setImageViewBearing(bearing));
-  }, [imageKey, setImageLatLng]);
+      mly.current.on(Mapillary.Viewer.nodechanged, (node) => setImageLatLng([node.latLon.lat, node.latLon.lon]));
+      mly.current.on(Mapillary.Viewer.bearingchanged, (bearing) => setImageViewBearing(bearing));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    mly.current.isNavigable && mly.current.moveToKey(imageKey);
+  }, [imageKey]);
   const handleMouseMapLeave = () => setMouseOverMap(false);
   const handleMouseMapEnter = () => setMouseOverMap(true);
-  const handleMapClick = () => setImageKey(null);
+  const handleMapClick = () => setSelectionType('map');
   const mapDimensions = useSpring({height: mouseOverMap ? '200px' : '100px', width: mouseOverMap ? '200px' : '100px'});
   return(
     <animated.div id="mly" style={{

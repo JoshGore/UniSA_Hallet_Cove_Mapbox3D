@@ -1,16 +1,20 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
-const SelectionDetails = ({selectedGigapanImageKey, selectedGigapanImageLatLng, selectedGigapanImageWidthHeight, selectedMapillaryImageKey, selectedMapillaryImageLatLng}) => {
+const SelectionDetails = (
+  {gigapanImageKey, gigapanImageLatLng, gigapanImageWidthHeight, gigapanImageBounds, mapillaryImageKey, mapillaryImageLatLng, selectionType}
+) => {
   return (
     <div>
-    {selectedGigapanImageKey && 
+    {selectionType === 'panorama' && 
         <div>
-        <p>{`Image Key: ${selectedGigapanImageKey}`}</p>
-        <p>{`Gigapan Width and Height: [${selectedGigapanImageWidthHeight[0]}, ${selectedGigapanImageWidthHeight[1]}]`}</p>
-        <p>{`Gigapan Image Lat and Lng: [${selectedGigapanImageLatLng[0]}, ${selectedGigapanImageLatLng[1]}]`}</p>
+        <p>{`Image Key: ${gigapanImageKey}`}</p>
+        <p>{`Gigapan Width and Height: [${gigapanImageWidthHeight[0]}, ${gigapanImageWidthHeight[1]}]`}</p>
+        <p>{`Gigapan Image Lat and Lng: [${gigapanImageLatLng[0]}, ${gigapanImageLatLng[1]}]`}</p>
+        <p>{`Gigapan Image Bounds: {x: ${gigapanImageBounds.x}, y: ${gigapanImageBounds.y}, width: ${gigapanImageBounds.width}, height: ${gigapanImageBounds.height}}`}</p>
         </div>
     }
-    {selectedMapillaryImageKey && <p>{`Image Key: ${selectedMapillaryImageKey}`}</p> }
+    {selectionType === 'photosphere' && <p>{`Image Key: ${mapillaryImageKey}`}</p> }
     </div>
   );
 }
@@ -20,11 +24,13 @@ const InfoBox = ({
   body, 
   handleTourNext, 
   handleTourPrevious,
-  selectedGigapanImageKey, 
-  selectedGigapanImageLatLng,
-  selectedGigapanImageWidthHeight, 
-  selectedMapillaryImageKey,
-  selectedMapillaryImageLatLng,
+  gigapanImageKey, 
+  gigapanImageLatLng,
+  gigapanImageWidthHeight, 
+  gigapanImageBounds,
+  mapillaryImageKey,
+  mapillaryImageLatLng,
+  selectionType,
   showDetails
 }) => {
   return (
@@ -50,15 +56,17 @@ const InfoBox = ({
         }}
       >
         {showDetails && <SelectionDetails 
-          selectedGigapanImageKey={selectedGigapanImageKey} 
-          selectedGigapanImageLatLng={selectedGigapanImageLatLng} 
-          selectedGigapanImageWidthHeight={selectedGigapanImageWidthHeight} 
-          selectedMapillaryImageKey={selectedMapillaryImageKey} 
-          selectedMapillaryImageLatLng={selectedMapillaryImageLatLng}
+          gigapanImageKey={gigapanImageKey} 
+          gigapanImageLatLng={gigapanImageLatLng} 
+          gigapanImageWidthHeight={gigapanImageWidthHeight} 
+          mapillaryImageKey={mapillaryImageKey} 
+          mapillaryImageLatLng={mapillaryImageLatLng}
+          gigapanImageBounds={gigapanImageBounds}
+          selectionType={selectionType}
           />}
           <br />
           <h3>{heading}</h3>
-          {body}
+          <ReactMarkdown source={body} />
       </div>
       <div style={{bottom: 0, width: '100%'}}>
         <u onClick={handleTourPrevious} style={{color: 'white', cursor: 'pointer'}}>previous</u>

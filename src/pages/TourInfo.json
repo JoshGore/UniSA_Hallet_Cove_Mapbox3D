@@ -17,7 +17,19 @@
       "title": "2. Evidence of an ancient ice age",
       "content": "The polished and striated rock surface (galacial pavement) on the top of Black Cliff was caused by a northwesterly moving ice sheet about 280 million years ago.",
       "additional": {
+        "latLng":  [-35.07476729274945, 138.49561035633087],
         "widthHeight": [74214, 27041]
+      }
+    },
+    {
+      "type": "panorama",
+      "key": "198455",
+      "title": "2. Evidence of an ancient ice age",
+      "content": "The polished and striated rock surface (galacial pavement) on the top of Black Cliff was caused by a northwesterly moving ice sheet about 280 million years ago.",
+      "additional": {
+        "latLng":  [-35.07476729274945, 138.49561035633087],
+        "widthHeight": [74214, 27041],
+        "viewBounds": {"x": 0.5654795056505318, "y": 0.2512689750329455, "width": 0.03917404537737303, "height": 0.026408646837033922}
       }
     },
     {
@@ -38,6 +50,7 @@
       "title": "5. gaps in the geological record",
       "content": "At Waterfall Creek three unconformities are exposed.",
       "additional": {
+        "latLng": [-35.07126818442045, 138.49758446216583],
         "widthHeight": [64657, 23781]
       }
     },
@@ -71,6 +84,7 @@
       "title": "11. Permian Galacial Sediments",
       "content": "Glacial sediments with ripple marks, graded bedding and rip-up clasts are exposed here.",
       "additional": {
+        "latLng": [-35.077401403288754, 138.49682807922363],
         "widthHeight": [56708, 22659]
       }
     }
