@@ -72,10 +72,27 @@ const Map = ({imageLatLng, imageViewBearing}) => {
   )
 }
 
-const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng, setSelectionType}) => {
+const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng, setSelectionType, imageCenterZoom, setImageCenterZoom}) => {
   const [mouseOverMap, setMouseOverMap] = useState(false);
   const [imageViewBearing, setImageViewBearing] = useState(0);
   const mly = useRef(undefined);
+  const imageCenterZoomRef = useRef(null);
+  useEffect(() => {
+    imageCenterZoomRef.current = imageCenterZoom;
+  });
+  const handleViewChange = (eventData) => {
+    console.log("running");
+    mly.current.getCenter().then((center) => {
+      mly.current.getZoom().then((zoom) => {
+        console.log(center);
+        console.log(zoom);
+        console.log(imageCenterZoomRef);
+        if (imageCenterZoomRef.current.zoom !== zoom || imageCenterZoomRef.current.center[0] !== center[0] || imageCenterZoomRef.current.center[1] !== center[1]) {
+          setImageCenterZoom({zoom: zoom, center: center})
+        }
+      });
+    });
+  }
   useEffect(() => {
       mly.current = new Mapillary.Viewer(
           'mly',
@@ -89,14 +106,19 @@ const MapillaryPanorama = ({imageKey, setImageKey, imageLatLng, setImageLatLng, 
           }
       );
       mly.current.setFilter(['==', 'userKey', 'mwAQzO4gTW2H2QwVOYVgJA'])
-      window.addEventListener("resize", function() { mly.resize(); });
+      window.addEventListener("resize", () => { mly.current.resize(); });
       mly.current.on(Mapillary.Viewer.nodechanged, (node) => setImageLatLng([node.latLon.lat, node.latLon.lon]));
       mly.current.on(Mapillary.Viewer.bearingchanged, (bearing) => setImageViewBearing(bearing));
+      mly.current.on(Mapillary.Viewer.moveend, handleViewChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     mly.current.isNavigable && mly.current.moveToKey(imageKey);
   }, [imageKey]);
+  useEffect(() => {
+    mly.current.setCenter(imageCenterZoom.center);
+    mly.current.setZoom(imageCenterZoom.zoom);
+  }, [imageCenterZoom]);
   const handleMouseMapLeave = () => setMouseOverMap(false);
   const handleMouseMapEnter = () => setMouseOverMap(true);
   const handleMapClick = () => setSelectionType('map');

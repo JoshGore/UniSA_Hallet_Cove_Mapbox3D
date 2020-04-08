@@ -12,6 +12,7 @@ const AppContents = ({showDetails = false}) => {
   const [selectionType, setSelectionType] = useState('map');
   const [mapillaryImageKey,setMapillaryImageKey] = useState(null);
   const [mapillaryImageLatLng, setMapillaryImageLatLng] = useState([undefined, undefined]);
+  const [mapillaryImageCenterZoom, setMapillaryImageCenterZoom] = useState({zoom: 0, center: [0.5, 0.5]});
   const [gigapanImageKey, setGigapanImageKey] = useState(undefined);
   const [gigapanImageWidthHeight, setGigapanImageWidthHeight] = useState([undefined, undefined]);
   const [gigapanImageLatLng, setGigapanImageLatLng] = useState([undefined, undefined]);
@@ -37,7 +38,7 @@ const AppContents = ({showDetails = false}) => {
       setGigapanImageLatLng(TourInfo.tour[currentTourStep].additional.latLng);
       setGigapanImageWidthHeight(TourInfo.tour[currentTourStep].additional.widthHeight);
       setGigapanImageKey(TourInfo.tour[currentTourStep].key);
-      if (TourInfo.tour[currentTourStep].additional.viewBounds) {
+      if (TourInfo.tour[currentTourStep].additional && TourInfo.tour[currentTourStep].additional.viewBounds) {
         setGigapanImageBounds(TourInfo.tour[currentTourStep].additional.viewBounds);
       }
       else {
@@ -48,6 +49,12 @@ const AppContents = ({showDetails = false}) => {
     else if (TourInfo.tour[currentTourStep].type === 'photosphere') {
       setMapillaryImageKey(TourInfo.tour[currentTourStep].key);
       setSelectionType('photosphere');
+      if (TourInfo.tour[currentTourStep].additional && TourInfo.tour[currentTourStep].additional.centerZoom) {
+        setMapillaryImageCenterZoom(TourInfo.tour[currentTourStep].additional.centerZoom);
+      }
+      else {
+        setMapillaryImageCenterZoom({center: [0.5, 0.5], zoom: 0});
+      }
     }
   }, [currentTourStep]);
   useEffect(() => {
@@ -60,6 +67,7 @@ const AppContents = ({showDetails = false}) => {
     const clearMapillaryState = () => {
       setMapillaryImageKey(undefined);
       setMapillaryImageLatLng([undefined, undefined]);
+      setMapillaryImageCenterZoom({center: [0.5, 0.5], zoom: 0})
     }
     if (selectionType === 'map') {
       clearGigapanState();
@@ -86,6 +94,7 @@ const AppContents = ({showDetails = false}) => {
         gigapanImageBounds={gigapanImageBounds}
         mapillaryImageKey={mapillaryImageKey}
         mapillaryImageLatLng={mapillaryImageLatLng}
+        mapillaryImageCenterZoom={mapillaryImageCenterZoom}
         showDetails={showDetails}
         selectionType={selectionType}
       />
@@ -104,6 +113,8 @@ const AppContents = ({showDetails = false}) => {
           setImageKey={setMapillaryImageKey} 
           imageLatLng={mapillaryImageLatLng} 
           setImageLatLng={setMapillaryImageLatLng}
+          imageCenterZoom={mapillaryImageCenterZoom}
+          setImageCenterZoom={setMapillaryImageCenterZoom}
         />}
         {selectionType === 'panorama' &&
           <GigapanPanorama 

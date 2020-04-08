@@ -71,7 +71,9 @@ const Map = ({imageLatLng, imageViewBearing}) => {
   )
 }
 
-const GigapanPanorama = ({imageKey, setImageKey, imageHeight, imageWidth, imageLatLng, imageBounds, setImageBounds, setSelectionType}) => {
+const GigapanPanorama = ({
+  imageKey, setImageKey, imageHeight, imageWidth, imageLatLng, imageBounds, setImageBounds, setSelectionType
+}) => {
   const viewer = useRef(undefined);
   const imageBoundsRef = useRef(imageBounds);
   const [mouseOverMap, setMouseOverMap] = useState(false);

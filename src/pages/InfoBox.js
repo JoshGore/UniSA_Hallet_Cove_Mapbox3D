@@ -2,19 +2,24 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 const SelectionDetails = (
-  {gigapanImageKey, gigapanImageLatLng, gigapanImageWidthHeight, gigapanImageBounds, mapillaryImageKey, mapillaryImageLatLng, selectionType}
+  {gigapanImageKey, gigapanImageLatLng, gigapanImageWidthHeight, gigapanImageBounds, mapillaryImageKey, mapillaryImageLatLng, mapillaryImageCenterZoom, selectionType}
 ) => {
   return (
     <div>
     {selectionType === 'panorama' && 
         <div>
-        <p>{`Image Key: ${gigapanImageKey}`}</p>
-        <p>{`Gigapan Width and Height: [${gigapanImageWidthHeight[0]}, ${gigapanImageWidthHeight[1]}]`}</p>
-        <p>{`Gigapan Image Lat and Lng: [${gigapanImageLatLng[0]}, ${gigapanImageLatLng[1]}]`}</p>
-        <p>{`Gigapan Image Bounds: {x: ${gigapanImageBounds.x}, y: ${gigapanImageBounds.y}, width: ${gigapanImageBounds.width}, height: ${gigapanImageBounds.height}}`}</p>
+          <p>{`Image Key: ${gigapanImageKey}`}</p>
+          <p>{`Width and Height: [${gigapanImageWidthHeight[0]}, ${gigapanImageWidthHeight[1]}]`}</p>
+          <p>{`Lat and Lng: [${gigapanImageLatLng[0]}, ${gigapanImageLatLng[1]}]`}</p>
+          <p>{`View Bounds: {x: ${gigapanImageBounds.x}, y: ${gigapanImageBounds.y}, width: ${gigapanImageBounds.width}, height: ${gigapanImageBounds.height}}`}</p>
         </div>
     }
-    {selectionType === 'photosphere' && <p>{`Image Key: ${mapillaryImageKey}`}</p> }
+    {selectionType === 'photosphere' && 
+        <div>
+          <p>{`Image Key: ${mapillaryImageKey}`}</p>
+          <p>{`View: {center: [${mapillaryImageCenterZoom.center[0]}, ${mapillaryImageCenterZoom.center[1]}], zoom: ${mapillaryImageCenterZoom.zoom}}`}</p>
+        </div> 
+    }
     </div>
   );
 }
@@ -30,6 +35,7 @@ const InfoBox = ({
   gigapanImageBounds,
   mapillaryImageKey,
   mapillaryImageLatLng,
+  mapillaryImageCenterZoom,
   selectionType,
   showDetails
 }) => {
@@ -61,6 +67,7 @@ const InfoBox = ({
           gigapanImageWidthHeight={gigapanImageWidthHeight} 
           mapillaryImageKey={mapillaryImageKey} 
           mapillaryImageLatLng={mapillaryImageLatLng}
+          mapillaryImageCenterZoom={mapillaryImageCenterZoom}
           gigapanImageBounds={gigapanImageBounds}
           selectionType={selectionType}
           />}

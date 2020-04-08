@@ -12,6 +12,15 @@
       "content": "The chocolate-coloured rocks of Black Cliff were deposited as sand and silt in the sea about 600 million years ago. About 500 million years ago, they were uplifted and folded during a period of mountain building which formed what has been called the Delamerian Orogeny. The folds are best seen from the top of Black Cliff at low tide."
     },
     {
+      "type": "photosphere",
+      "key": "ffmZR-5GNkbdYRUcJWheeQ",
+      "title": "1. From Sea Bed to Mountain Range",
+      "content": "The chocolate-coloured rocks of Black Cliff were deposited as sand and silt in the sea about 600 million years ago. About 500 million years ago, they were uplifted and folded during a period of mountain building which formed what has been called the Delamerian Orogeny. The folds are best seen from the top of Black Cliff at low tide.",
+      "additional": {
+        "centerZoom": {"center": [0.36086690056464266, 0.5026783085453723], "zoom": 2.4806094182825484}
+      }
+    },
+    {
       "type": "panorama",
       "key": "198455",
       "title": "2. Evidence of an ancient ice age",
