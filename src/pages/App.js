@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import Map from './Map';
+import MapESRI3D from './MapESRI3D';
 import MapillaryPanorama from './MapillaryPanorama';
 import GigapanPanorama from './GigapanPanorama';
 import InfoBox from './InfoBox';
@@ -9,7 +10,8 @@ import TourInfo from './TourInfo';
 
 const AppContents = ({showDetails = false}) => {
   // track selection type, selection key, selection details (location, view direction, image details if gigapan), selection zoom and view location 
-  const [selectionType, setSelectionType] = useState('map');
+  // const [selectionType, setSelectionType] = useState('map');
+  const [selectionType, setSelectionType] = useState('3d');
   const [mapillaryImageKey,setMapillaryImageKey] = useState(null);
   const [mapillaryImageLatLng, setMapillaryImageLatLng] = useState([undefined, undefined]);
   const [mapillaryImageCenterZoom, setMapillaryImageCenterZoom] = useState({zoom: 0, center: [0.5, 0.5]});
@@ -31,7 +33,10 @@ const AppContents = ({showDetails = false}) => {
     // panorama photosphere map
     setInfoBoxTitle(TourInfo.tour[currentTourStep].title);
     setInfoBoxContent(TourInfo.tour[currentTourStep].content);
-    if (TourInfo.tour[currentTourStep].type === 'map') {
+    if (TourInfo.tour[currentTourStep].type === '3d') {
+      setSelectionType('3d');
+    }
+    else if (TourInfo.tour[currentTourStep].type === 'map') {
       setSelectionType('map');
     }
     else if (TourInfo.tour[currentTourStep].type === 'panorama') {
@@ -98,14 +103,15 @@ const AppContents = ({showDetails = false}) => {
         showDetails={showDetails}
         selectionType={selectionType}
       />
-      <Map 
+      {selectionType === '3d' && <MapESRI3D />}
+      {selectionType === 'map' && <Map 
         setSelectionType={setSelectionType}
         setMapillaryImageKey={setMapillaryImageKey} 
         setMapillaryImageLatLng={setMapillaryImageLatLng}
         setGigapanImageKey={setGigapanImageKey}
         setGigapanImageWidthHeight={setGigapanImageWidthHeight}
         setGigapanImageLatLng={setGigapanImageLatLng}
-      />
+      />}
       {selectionType === 'photosphere' && 
         <MapillaryPanorama 
           setSelectionType={setSelectionType}

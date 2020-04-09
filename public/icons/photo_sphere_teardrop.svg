@@ -16,7 +16,7 @@
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="photo_sphere_teardrop.svg"
-   inkscape:export-filename="\\wsl$\Ubuntu\home\jagore\development\WalkTheYorkeClient\src\pages\app\map\icons\user_issue_teardrop.png"
+   inkscape:export-filename="G:\Home\Development\UniSA_Hallet_Cove\unisa_hallet_cove_mapbox3d\public\icons\photo_sphere_teardrop.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -42,9 +42,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.28"
-     inkscape:cx="5.365964"
-     inkscape:cy="1.6525799"
+     inkscape:zoom="0.64"
+     inkscape:cx="-329.62567"
+     inkscape:cy="8.1910719"
      inkscape:document-units="mm"
      inkscape:current-layer="g4932"
      showgrid="false"
@@ -72,7 +72,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

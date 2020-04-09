@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from  'react';
 import ReactMapGl, {FlyToInterpolator, Source, Layer, Popup, NavigationControl} from 'react-map-gl';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapillaryPopup from './map/MapillaryPopup';
 
@@ -16,7 +17,9 @@ const Map = ({
   const [viewport, setViewport] = useState({
     latitude: -35.07237,
     longitude: 138.49895,
-    zoom: 14
+    zoom: 14,
+    pitch: 0,
+    bearing: 0
   });
   const [mapillaryPopup, setMapillaryPopup] = useState({lngLat: [undefined, undefined], imgKey: undefined});
   const mapRef = useRef(null);
@@ -46,7 +49,20 @@ const Map = ({
       setSelectionType('photosphere');
     }
   };
-  // image layer toggle
+
+  /*
+  const layer = new Tile3DLayer({
+    id: 'tile-3d-layer',
+    data: 'https://tiles.arcgis.com/tiles/Lmcs3aS4AodOs221/arcgis/rest/services/Hallet_Cove_Conservation_Park_4_LOD_Low_Quality_Texture/SceneServer/layers/0',
+    loader: I3SLoader,
+  });
+      <DeckGL
+        {...viewport}
+        layers={[layer]}
+      >
+      </DeckGL>
+      */
+
   return (
     <ReactMapGl
       mapStyle={'mapbox://styles/joshg/ck7l9wc350fcf1iqg3kp15es3'}
@@ -69,7 +85,13 @@ const Map = ({
           'circle-radius': 15,
         }}
       />
-      <Layer id={'all-of-park-image'} type={'raster'} source={'mapbox://joshg.2sq1wkzy'} beforeId={'tunnel-street-minor-low'}/>
+      <Layer 
+        id={'all-of-park-image'} 
+        type={'raster'} 
+        source={'mapbox://joshg.2sq1wkzy'} 
+        beforeId={'tunnel-street-minor-low'} 
+          layout={{visibility: 'visible'}}
+      />
       <Layer 
         id={'mapillary-highres-images'} 
         type={'symbol'} 
