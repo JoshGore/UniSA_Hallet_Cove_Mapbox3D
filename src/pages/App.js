@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
-import Map from './Map';
-import MapESRI3D from './MapESRI3D';
+import Mapbox2D from './map/Mapbox2D';
+import ESRI3D from './map/ESRI3D';
 import MapillaryPanorama from './MapillaryPanorama';
 import GigapanPanorama from './GigapanPanorama';
 import InfoBox from './InfoBox';
@@ -103,8 +103,15 @@ const AppContents = ({showDetails = false}) => {
         showDetails={showDetails}
         selectionType={selectionType}
       />
-      {selectionType === '3d' && <MapESRI3D />}
-      {selectionType === 'map' && <Map 
+      {selectionType === '3d' && <ESRI3D 
+        setMapillaryImageKey={setMapillaryImageKey}
+        setMapillaryImageLatLng={setMapillaryImageLatLng}
+        setGigapanImageKey={setGigapanImageKey}
+        setGigapanImageWidthHeight={setGigapanImageWidthHeight}
+        setGigapanImageLatLng={setGigapanImageLatLng}
+        setSelectionType={setSelectionType}
+      />}
+      {selectionType === 'map' && <Mapbox2D 
         setSelectionType={setSelectionType}
         setMapillaryImageKey={setMapillaryImageKey} 
         setMapillaryImageLatLng={setMapillaryImageLatLng}

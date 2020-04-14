@@ -2,11 +2,11 @@ import React, {useState, useRef, useEffect} from  'react';
 import ReactMapGl, {FlyToInterpolator, Source, Layer, Popup, NavigationControl} from 'react-map-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import MapillaryPopup from './map/MapillaryPopup';
+import MapillaryPopup from './MapillaryPopup';
 
 const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zaGciLCJhIjoiY2s3am9lYzlwMDhsMTNrbGtiZjF0bDhwdSJ9.P7AnDzO_uMnrMeLAJxsFKQ';
 
-const Map = ({
+const Mapbox2D = ({
   setMapillaryImageKey, 
   setMapillaryImageLatLng,
   setGigapanImageKey,
@@ -132,4 +132,4 @@ const Map = ({
   )
 }
 
-export default Map;
+export default Mapbox2D;
