@@ -18,6 +18,14 @@ const AppContents = ({ showDetails = false }) => {
     pitch: 0,
     bearing: 0,
   });
+  const [viewpoint, setViewpoint] = useState({
+    scale: 11102,
+    targetGeometry: {
+      latitude: -35.07404623004308,
+      longitude: 138.4980938736986,
+      type: 'point',
+    },
+  });
   const [mapillaryImageKey, setMapillaryImageKey] = useState(null);
   const [mapillaryImageLatLng, setMapillaryImageLatLng] = useState([
     undefined,
@@ -157,6 +165,8 @@ const AppContents = ({ showDetails = false }) => {
           setSelectionType={setSelectionType}
           selectionType={selectionType}
           mapState={mapState}
+          viewpoint={viewpoint}
+          setViewpoint={setViewpoint}
           setMapState={setMapState}
         />
       )}
